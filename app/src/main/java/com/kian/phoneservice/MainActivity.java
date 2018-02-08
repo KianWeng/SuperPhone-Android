@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity{
     private static final int CALL_PHONE_REQUEST_CODE = 123;
     private static final String TAG = "MainActivity";
     private Button startButton, confirmButton, stopButton;
-    private EditText token;
+    private static EditText token;
+    private static String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +46,13 @@ public class MainActivity extends AppCompatActivity{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String id = token.getText().toString();
+                id = token.getText().toString();
                 if(id.trim().length() != 0){
                     saveToken(id);
-                    if(MQTTClient.getInstance() != null) {
-                        MQTTClient.getInstance().subscribeToTopic("/dev2app/" + id + "/call");
+                    if(MQTTClient.getInstance().isConnect == false) {
+                        Log.d(TAG,"等待连接服务器后订阅主题");
                     }else{
-                        Toast.makeText(MainActivity.this, "请先点击start按钮启动服务", Toast.LENGTH_SHORT).show();
+                        MQTTClient.getInstance().subscribeToTopic("/dev2app/" + id + "/call");
                     }
                 }
             }

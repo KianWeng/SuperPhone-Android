@@ -26,6 +26,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MQTTClient {
     private static final String TAG = "MQTTService";
 
+    public boolean isConnect = false;
     private IMessageListener messageListener;
     private static MqttAndroidClient client;
     private MqttConnectOptions conOpt;
@@ -166,6 +167,7 @@ public class MQTTClient {
             if(token.trim().length() != 0){
                 subscribeToTopic("/dev2app/" + token + "/call");
             }
+            isConnect = true;
         }
 
         @Override
@@ -207,6 +209,7 @@ public class MQTTClient {
         public void connectionLost(Throwable arg0) {
             // 失去连接，重连
             Log.i(TAG,"The Connection was lost.");
+            isConnect = false;
         }
     };
 
